@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GeoTrace | Digital Forensics Explorer</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark border-bottom border-secondary-subtle">
+    <div class="container-fluid px-lg-4">
+      <a class="navbar-brand fw-bold" href="#"><span class="brand-mark">G</span> GeoTrace <span class="small muted ms-2">CSDF LAB</span></a>
+      <span class="badge text-bg-success">LOCAL DEMO</span>
+    </div>
+  </nav>
+  <main class="container-fluid px-lg-4 py-4">
+    <section class="mb-4">
+      <p class="eyebrow mb-1">DIGITAL FORENSICS WORKSPACE</p>
+      <h1 class="h2 fw-bold">IP Intelligence Explorer</h1>
+      <p class="muted mb-0">Enrich public IP metadata, visualize approximate locations, and analyze supplied network logs.</p>
+    </section>
+
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-xl-3"><div class="metric"><span>Valid events</span><strong id="metricEvents">—</strong><small>From latest CSV analysis</small></div></div>
+      <div class="col-6 col-xl-3"><div class="metric"><span>Unique IPs</span><strong id="metricIps">—</strong><small>Distinct normalized addresses</small></div></div>
+      <div class="col-6 col-xl-3"><div class="metric"><span>Invalid rows</span><strong id="metricInvalid">—</strong><small>Skipped during parsing</small></div></div>
+      <div class="col-6 col-xl-3"><div class="metric"><span>Evidence hash</span><strong id="metricHash">—</strong><small>SHA-256 of uploaded file</small></div></div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-12 col-xl-4">
+        <section class="panel h-100">
+          <div class="panel-head"><div><p class="eyebrow mb-1">LOOKUP</p><h2 class="h5 mb-0">IP address intelligence</h2></div></div>
+          <form id="lookupForm" class="mt-3">
+            <label for="ipInput" class="form-label">Public IPv4 or IPv6 address</label>
+            <div class="input-group">
+              <input id="ipInput" class="form-control" placeholder="e.g. 8.8.8.8" required maxlength="45">
+              <button class="btn btn-accent" type="submit">Analyze</button>
+            </div>
+            <div class="form-text muted">Private and reserved addresses are not sent to the provider.</div>
+          </form>
+          <div id="lookupStatus" class="status mt-3" role="status">Enter an IP address to begin.</div>
+          <div id="lookupResult" class="result-grid mt-3"></div>
+          <button id="focusMap" class="btn btn-outline-light btn-sm mt-3 d-none">Show on map</button>
+        </section>
+      </div>
+      <div class="col-12 col-xl-8">
+        <section class="panel">
+          <div class="panel-head"><div><p class="eyebrow mb-1">GEOSPATIAL VIEW</p><h2 class="h5 mb-0">Approximate IP locations</h2></div><span class="muted small">Map tiles require internet</span></div>
+          <div id="map" class="map mt-3"></div>
+          <p class="muted small mt-2 mb-0">Locations are approximate network-level estimates, not a person's precise physical position. © OpenStreetMap contributors.</p>
+        </section>
+      </div>
+      <div class="col-12">
+        <section class="panel">
+          <div class="panel-head flex-wrap gap-3">
+            <div><p class="eyebrow mb-1">EVIDENCE PROCESSING</p><h2 class="h5 mb-0">Forensic log analyzer</h2></div>
+            <a class="btn btn-outline-light btn-sm" href="/sample-logs.csv" download>Download sample CSV</a>
+          </div>
+          <p class="muted mt-2">Upload a CSV with an IP column. Optional columns: timestamp and event. Files are analyzed in memory for this demo.</p>
+          <form id="uploadForm" class="row g-2 align-items-end">
+            <div class="col-12 col-lg-8"><label class="form-label" for="csvFile">CSV evidence/log file (max 5 MB)</label><input id="csvFile" class="form-control" type="file" accept=".csv,text/csv" required></div>
+            <div class="col-12 col-lg-4"><button class="btn btn-accent w-100" type="submit">Analyze CSV</button></div>
+          </form>
+          <div id="analysisStatus" class="status mt-3" role="status">No file analyzed yet.</div>
+          <div id="analysisSummary" class="mt-3"></div>
+          <div class="row g-4 mt-1">
+            <div class="col-12 col-lg-5"><h3 class="h6">Most frequent IP addresses</h3><div class="table-responsive"><table class="table table-dark table-sm align-middle"><thead><tr><th>IP</th><th>Count</th><th></th></tr></thead><tbody id="topIps"><tr><td colspan="3" class="muted">No data yet.</td></tr></tbody></table></div></div>
+            <div class="col-12 col-lg-7"><h3 class="h6">Chronological events</h3><div class="table-responsive event-table"><table class="table table-dark table-sm align-middle"><thead><tr><th>Timestamp</th><th>IP</th><th>Event</th></tr></thead><tbody id="events"><tr><td colspan="3" class="muted">No data yet.</td></tr></tbody></table></div></div>
+          </div>
+          <button id="exportResults" class="btn btn-outline-light btn-sm mt-3 d-none">Export event results CSV</button>
+        </section>
+      </div>
+    </div>
+    <footer class="muted small py-4">GeoTrace CSDF Mini Project · Educational prototype · Use only data you are authorized to examine.</footer>
+  </main>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
